@@ -1,96 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DSE Share Price & Gold Chart</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="page-wrapper" data-theme="light">
+  <header>
+    <div class="header-left">
+      <h1 class="title" tabindex="0">DSE Share Price Live Table & Gold Chart</h1>
+    </div>
+    <nav id="nav-links" role="navigation" aria-label="View toggle">
+      <button id="btn-dse" class="active" aria-pressed="true" aria-controls="main-content">DSE</button>
+      <button id="btn-gold" aria-pressed="false" aria-controls="main-content">Gold</button>
+    </nav>
+    <div id="theme-toggle" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle light and dark theme">
+      <span class="icon sun" aria-hidden="true">☀️</span>
+      <div class="switch">
+        <div class="knob"></div>
+      </div>
+      <span class="icon moon" aria-hidden="true">🌙</span>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div id="dse-content">
+      <div id="controls" role="region" aria-label="Table Controls">
+        <input type="search" id="search" placeholder="Search Company..." aria-label="Search Company" />
+        <button id="refresh" aria-label="Refresh Table Data">Refresh</button>
+      </div>
+      <div id="table-container" tabindex="0" aria-describedby="tableDesc" role="region" aria-live="polite" aria-busy="false" aria-label="DSE Share Price Table">
+      </div>
+      <div id="loading-overlay" aria-live="assertive" aria-busy="true" aria-label="Loading">
+        <div class="spinner" role="status"></div>
+      </div>
+    </div>
+
+    <div id="gold-content" style="display:none; flex:1; flex-direction: column; height:100%;">
+      <div id="chart-container">
+        <div id="tradingview_gold"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
     <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
+      &copy; 2025 Masud Sikdar &mdash; Powered by
+      <a href="https://www.dsebd.org" target="_blank" rel="noopener">DSE</a> &amp;
+      <a href="https://www.tradingview.com" target="_blank" rel="noopener">TradingView</a>
     </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+  </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script src="app.js"></script>
+</body>
 </html>

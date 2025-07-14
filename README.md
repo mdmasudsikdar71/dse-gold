@@ -1,14 +1,12 @@
----
-name: HTML Starter
-slug: html-starter-with-analytics
-description: HTML5 template with analytics and advanced routing configuration.
-deployUrl: https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/html&project-name=html
-relatedTemplates:
-  - nextjs-boilerplate
----
+# 📊 DSE Gold — Realtime Stock Data
 
-# HTML Starter
+A minimalist, fast, and responsive web app to visualize real-time data from the Dhaka Stock Exchange (DSE), built with HTML, CSS, and JavaScript. It features TradingView integration, dark mode, sortable tables, and responsive UI design.
 
-This is a starter HTML5 templates which is configured with Vercel Analytics (through a `script` tag), advanced routing with [Vercel Edge Middleware](https://vercel.com/docs/concepts/functions/edge-middleware), as well as some basic styles
+## ✨ Features
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/html&project-name=html)
+- 📈 Live DSE stock data
+- 🌙 Light & dark mode toggle
+- 🔍 Search & sort functionality
+- 📉 Integrated TradingView chart
+- ⚡ Clean UI with responsive layout
+- 🌓 Smooth theme transitions
