@@ -342,10 +342,6 @@ tbody tr:hover {
     background-color: #eaf2ff;
 }
 
-tbody tr:nth-child(even) {
-    background-color: #f9fbfd;
-}
-
 td.positive {
     color: var(--positive);
     font-weight: bold;

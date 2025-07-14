@@ -29,6 +29,32 @@ $(function () {
     });
 
     // ==============================
+    // Natural Compare Function
+    // ==============================
+    function naturalCompare(a, b) {
+        const ax = [], bx = [];
+
+        a.replace(/(\d+)|(\D+)/g, (_, $1, $2) => {
+            ax.push([$1 !== undefined ? parseInt($1, 10) : Infinity, $2 || ""]);
+        });
+        b.replace(/(\d+)|(\D+)/g, (_, $1, $2) => {
+            bx.push([$1 !== undefined ? parseInt($1, 10) : Infinity, $2 || ""]);
+        });
+
+        while (ax.length && bx.length) {
+            const an = ax.shift();
+            const bn = bx.shift();
+
+            if (an[0] !== bn[0]) return an[0] - bn[0];
+            const aText = an[1].toLowerCase();
+            const bText = bn[1].toLowerCase();
+            if (aText !== bText) return aText < bText ? -1 : 1;
+        }
+
+        return ax.length - bx.length;
+    }
+
+    // ==============================
     // DSE Table Functions
     // ==============================
     function showLoading() {
@@ -39,19 +65,6 @@ $(function () {
     function hideLoading() {
         $loading.removeClass('active');
         $tableContainer.attr('aria-busy', 'false');
-    }
-
-    function naturalCompare(a, b) {
-        const ax = [], bx = [];
-        a.replace(/(\d+)|(\D+)/g, (_, $1, $2) => ax.push([$1 || Infinity, $2 || ""]));
-        b.replace(/(\d+)|(\D+)/g, (_, $1, $2) => bx.push([$1 || Infinity, $2 || ""]));
-        while (ax.length && bx.length) {
-            const an = ax.shift(), bn = bx.shift();
-            if (an[0] !== bn[0]) return an[0] - bn[0];
-            if (an[1].toLowerCase() !== bn[1].toLowerCase())
-                return an[1].toLowerCase() < bn[1].toLowerCase() ? -1 : 1;
-        }
-        return ax.length - bx.length;
     }
 
     function fetchData() {
@@ -101,45 +114,47 @@ $(function () {
     function sortTable(index, order) {
         showLoading();
         setTimeout(() => {
-            const data = [];
-            $('#dse-table tbody tr').each(function () {
-                const cells = $(this).children().map((_, td) => $(td).text().trim()).get();
-                data.push({ row: this, cells });
+            const rows = Array.from(document.querySelectorAll('#dse-table tbody tr'));
+
+            const data = rows.map(row => {
+                const text = row.cells[index]?.textContent?.trim() || '';
+                return { row, value: text };
             });
 
-            const isNumeric = !isNaN(parseFloat(data[0]?.cells[index]?.replace(/,/g, '')));
+            const isNumeric = data.every(d => !isNaN(parseFloat(d.value.replace(/,/g, ''))));
 
             data.sort((a, b) => {
-                let A = a.cells[index].replace(/,/g, '');
-                let B = b.cells[index].replace(/,/g, '');
-
-                if (index === 1) {
-                    return order === 'asc' ? naturalCompare(A, B) : naturalCompare(B, A);
-                }
-
                 if (isNumeric) {
-                    return order === 'asc' ? parseFloat(A) - parseFloat(B) : parseFloat(B) - parseFloat(A);
+                    const numA = parseFloat(a.value.replace(/,/g, ''));
+                    const numB = parseFloat(b.value.replace(/,/g, ''));
+                    return order === 'asc' ? numA - numB : numB - numA;
+                } else {
+                    return order === 'asc'
+                        ? naturalCompare(a.value, b.value)
+                        : naturalCompare(b.value, a.value);
                 }
-
-                return order === 'asc' ? A.localeCompare(B) : B.localeCompare(A);
             });
 
-            const $tbody = $('#dse-table tbody').empty();
-            data.forEach(item => $tbody.append(item.row));
+            const fragment = document.createDocumentFragment();
+            data.forEach(item => fragment.appendChild(item.row));
+
+            const tbody = document.querySelector('#dse-table tbody');
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
 
             $('#dse-table thead th .sort-icon').html('&#x21D5;').parent().removeClass('sorted-asc sorted-desc');
             const arrow = order === 'asc' ? '&#x25B2;' : '&#x25BC;';
             $('#dse-table thead th').eq(index).find('.sort-icon').html(arrow).parent().addClass(`sorted-${order}`);
 
             hideLoading();
-        }, 20);
+        }, 10);
     }
 
     function bindSearch() {
         $search.off('input').on('input', function () {
             const val = $(this).val().toLowerCase();
             $('#dse-table tbody tr').each(function () {
-                const name = $(this).children().eq(1).text().toLowerCase();
+                const name = this.cells[1]?.textContent.toLowerCase();
                 $(this).toggle(name.includes(val));
             });
         });
